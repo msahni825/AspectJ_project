@@ -1,0 +1,37 @@
+// Copyright (c) 2002-2014 JavaMOP Team. All Rights Reserved.
+package transaction;
+
+import java.io.*;
+import java.util.*;
+
+Transaction(Transaction i) {
+	event commit before(Transaction i) : 
+              call(* Transaction.commit()) 
+              && target(i) {}
+	event start before(Transaction i) : 
+              call(* Transaction.start()) 
+              && target(i) {}
+    event modify before(Transaction i) : 
+              call(* Transaction.modify()) 
+              && target(i) {}
+	event modify after(Transaction i) : 
+              call(* Transaction.modify()) 
+              && target(i) {}
+    event rollback before(Transaction i) : 
+              call(* Transaction.rollback()) 
+              && target(i) {}
+	event rollback before(Transaction i) : 
+              call(* Transaction.rollback()) 
+              && target(i) {}
+
+	ere : (start modify* rollback)(start modify* commit) + (start modify* commit)+
+
+	@fail {
+	  System.err.println(
+             "! hasNext() has not been called"
+           + " before calling next() for an" 
+           + " iterator");
+          __RESET;
+	}
+}
+
